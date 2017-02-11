@@ -27,6 +27,7 @@ function SharpTVAccessory(log, config) {
 
 SharpTVAccessory.prototype.matchesString = function(match) {
   if(this.exactMatch) {
+      accessory.log(match + "===" + this.onValue);
     return (match === this.onValue);
   }
   else {
