@@ -27,7 +27,6 @@ function SharpTVAccessory(log, config) {
 
 SharpTVAccessory.prototype.matchesString = function(match) {
   if(this.exactMatch) {
-      this.log(match + "===" + this.onValue);
     return (match === this.onValue);
   }
   else {
@@ -43,15 +42,12 @@ SharpTVAccessory.prototype.setState = function(powerOn, callback) {
   var host = this.host;
   var port = this.port;
 
-  accessory.log('starting set');
-
   var client = new net.Socket();
   client.setTimeout(10000, function(err){
       accessory.log('Timed out connecting to ' + host + ':' + port);
 
   });
   client.connect(port, host, function() {
-      accessory.log('CONNECTED TO: ' + host + ':' + port);
       client.write(command + '\r\n');
   });
 
