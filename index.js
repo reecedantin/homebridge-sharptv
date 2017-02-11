@@ -93,7 +93,7 @@ SharpTVAccessory.prototype.getState = function(callback) {
 
   client.on('data', function(data) {
       state = data.toString('utf-8').trim();
-      if(state = "ERR") {
+      if(state == "ERR") {
           client.write(command + '\r\n');
       } else {
           client.end();
