@@ -45,7 +45,7 @@ SharpTVAccessory.prototype.setState = function(powerOn, callback) {
   accessory.log('starting set');
 
   var client = new net.Socket();
-  client.setTimeout(5000, function(err){
+  client.setTimeout(10000, function(err){
       accessory.log('Timed out connecting to ' + host + ':' + port);
 
   });
@@ -82,7 +82,7 @@ SharpTVAccessory.prototype.getState = function(callback) {
   var state;
 
   var client = new net.Socket();
-  client.setTimeout(5000, function(err){
+  client.setTimeout(10000, function(err){
       accessory.log('Timed out connecting to ' + host + ':' + port);
 
   });
