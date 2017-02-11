@@ -1,0 +1,24 @@
+{
+  "bridge": {
+    "name": "Homebridge",
+    "username": "CD:22:3D:E3:CE:30",
+    "port": 51826,
+    "pin": "031-45-154"
+  },
+
+  "description": "This is an example configuration for the SharpTV homebridge plugin",
+
+  "accessories": [
+    {
+      "accessory": "SharpTV",
+      "name": "Sharp TV",
+      "on": "POWR1   ",
+      "off": "POWR0   ",
+      "state": "POWR????",
+      "on_value" : "1",
+      "exact_match": true,
+      "host": "192.168.0.86",
+      "port": 10002
+    }
+  ]
+}
