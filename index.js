@@ -100,7 +100,7 @@ SharpTVAccessory.prototype.getState = function(callback) {
 
   client.on('close', function() {
     accessory.log('State of ' + accessory.name + ' is: ' + state);
-    callback(null, accessory.matchesString(state));
+    callback(null, accessory.matchesString("" + state));
   });
 
   client.on('error', function (err) {
