@@ -51,10 +51,11 @@ SharpTVAccessory.prototype.setState = function(powerOn, callback) {
   });
   client.connect(port, host, function() {
       accessory.log('CONNECTED TO: ' + host + ':' + port);
+      client.write(command + '\r\n');
   });
 
   client.on('data', function(data) {
-      client.write(command + '\r\n');
+      client.end();
   });
 
   client.on('close', function() {
