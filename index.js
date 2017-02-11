@@ -93,8 +93,9 @@ SharpTVAccessory.prototype.getState = function(callback) {
   });
 
   client.on('data', function(data) {
-      state = data.toString('utf-8').trim();
-      if(state !== "ERR") {
+      var input = data.toString('utf-8').trim();
+      if(input !== "ERR") {
+          state = input;
           client.end();
       }
   });
