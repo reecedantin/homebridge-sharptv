@@ -41,11 +41,11 @@ SharpTVAccessory.prototype.setState = function(powerOn, callback) {
   var command = accessory[prop];
   var host = this.host;
   var port = this.port;
+  var error;
 
   var client = new net.Socket();
   client.setTimeout(10000, function(err){
       accessory.log('Timed out connecting to ' + host + ':' + port);
-
   });
   client.connect(port, host, function() {
       client.write(command + '\r\n');
@@ -56,17 +56,21 @@ SharpTVAccessory.prototype.setState = function(powerOn, callback) {
   });
 
   client.on('close', function() {
-    accessory.log('Set ' + accessory.name + ' to ' + state);
-    callback(null);
+     if(!error){
+         accessory.log('Set ' + accessory.name + ' to ' + state);
+         callback(null);
+     }
   });
 
   client.on('error', function (err) {
     accessory.log('Error: ' + err);
+    error = err;
     client.destroy();
     callback(err || new Error('Error setting ' + accessory.name + ' to ' + state));
   });
 
   client.on('timeout', function () {
+    error = "timedout";
     client.destroy();
     callback(new Error('Error setting ' + accessory.name + ' to ' + state + ' -timedout'));
   });
@@ -77,10 +81,11 @@ SharpTVAccessory.prototype.getState = function(callback) {
   var command = accessory['stateCommand'];
   var host = this.host;
   var port = this.port;
-  var state;
+  var state = "0";
+  var error;
 
   var client = new net.Socket();
-  client.setTimeout(10000, function(err){
+  client.setTimeout(1000, function(err){
       accessory.log('Timed out connecting to ' + host + ':' + port);
 
   });
@@ -91,14 +96,21 @@ SharpTVAccessory.prototype.getState = function(callback) {
   client.on('data', function(data) {
       var input = data.toString('utf-8').trim();
       if(input !== "ERR") {
-          state = input[0];
-          client.end();
+          if(input[0] === "1") {
+              state = "1";
+              client.end();
+          } else {
+              state = "0";
+              client.end();
+          }
       }
   });
 
   client.on('close', function() {
     //accessory.log('State of ' + accessory.name + ' is: ' + state);
-    callback(null, accessory.matchesString("" + state));
+    if(!error) {
+        callback(null, accessory.matchesString("" + state));
+    }
   });
 
   client.on('error', function (err) {
@@ -107,8 +119,9 @@ SharpTVAccessory.prototype.getState = function(callback) {
   });
 
   client.on('timeout', function () {
-    client.destroy();
-    callback(new Error('Error setting ' + accessory.name + ' to ' + state + ' -timedout'));
+      error = "timedout";
+      client.destroy();
+      callback(new Error('Error setting ' + accessory.name + ' to ' + state + ' -timedout'));
   });
 }
 
